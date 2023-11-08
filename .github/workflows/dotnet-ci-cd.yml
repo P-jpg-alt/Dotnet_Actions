@@ -1,0 +1,42 @@
+name: Dotnet CI/CD
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: '5.0'
+
+    - name: Build
+      run: dotnet build
+
+    - name: Test
+      run: dotnet test
+      continue-on-error: true
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: '5.0'
+
+    - name: Deploy to AWS Elastic Beanstalk
+      run: |
+        # Add your deployment script here
